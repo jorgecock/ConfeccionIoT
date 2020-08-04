@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.5
+-- version 5.0.2
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 14-06-2020 a las 07:44:48
--- Versión del servidor: 10.1.38-MariaDB
--- Versión de PHP: 7.3.2
+-- Tiempo de generación: 04-08-2020 a las 05:34:08
+-- Versión del servidor: 10.4.11-MariaDB
+-- Versión de PHP: 7.4.5
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -62,10 +61,10 @@ CREATE TABLE `cliente` (
   `nit` int(11) DEFAULT NULL,
   `nombre` varchar(80) COLLATE utf8_spanish_ci DEFAULT NULL,
   `telefono` int(11) DEFAULT NULL,
-  `direccion` mediumtext COLLATE utf8_spanish_ci,
+  `direccion` mediumtext COLLATE utf8_spanish_ci DEFAULT NULL,
   `usuario_id` int(11) NOT NULL,
-  `status` int(11) NOT NULL DEFAULT '1',
-  `dateadd` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `status` int(11) NOT NULL DEFAULT 1,
+  `dateadd` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
@@ -118,8 +117,8 @@ CREATE TABLE `detalleordendeproduccion` (
   `idordendeproduccion` int(11) NOT NULL,
   `idproducto` int(11) NOT NULL,
   `cantidad` int(11) NOT NULL,
-  `status` int(11) NOT NULL DEFAULT '1',
-  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `status` int(11) NOT NULL DEFAULT 1,
+  `created_at` datetime DEFAULT current_timestamp(),
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
@@ -150,7 +149,7 @@ CREATE TABLE `empresas` (
   `nombre` varchar(80) COLLATE utf8_spanish_ci NOT NULL,
   `direccion` text COLLATE utf8_spanish_ci NOT NULL,
   `telefono` varchar(15) COLLATE utf8_spanish_ci NOT NULL,
-  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `created_at` datetime DEFAULT current_timestamp(),
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
   `idrelacionempresa` int(11) NOT NULL,
@@ -160,15 +159,9 @@ CREATE TABLE `empresas` (
   `correo` varchar(40) COLLATE utf8_spanish_ci NOT NULL,
   `web` varchar(255) COLLATE utf8_spanish_ci NOT NULL,
   `logo` varchar(40) COLLATE utf8_spanish_ci NOT NULL,
-  `status` int(11) NOT NULL DEFAULT '1'
+  `status` int(11) NOT NULL DEFAULT 1,
+  `usuario_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
-
---
--- Volcado de datos para la tabla `empresas`
---
-
-INSERT INTO `empresas` (`idempresa`, `codigo`, `nombre`, `direccion`, `telefono`, `created_at`, `updated_at`, `deleted_at`, `idrelacionempresa`, `descripcion`, `NIT`, `celular`, `correo`, `web`, `logo`, `status`) VALUES
-(1, '01', 'Gaviotas', 'Calle gaviotas', '300000000', '2020-04-12 00:00:00', '2020-04-12 00:00:00', '0000-00-00 00:00:00', 1, 'Venta de gaviotas', '1111111', '30000000', '', 'www.gaviotas.com', '', 1);
 
 -- --------------------------------------------------------
 
@@ -179,7 +172,7 @@ INSERT INTO `empresas` (`idempresa`, `codigo`, `nombre`, `direccion`, `telefono`
 CREATE TABLE `entradas` (
   `correlativo` int(11) NOT NULL,
   `idproducto` int(11) NOT NULL,
-  `fecha` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `fecha` datetime NOT NULL DEFAULT current_timestamp(),
   `cantidad` int(11) NOT NULL,
   `precio` decimal(10,2) NOT NULL,
   `usuario_id` int(11) NOT NULL
@@ -220,7 +213,8 @@ INSERT INTO `entradas` (`correlativo`, `idproducto`, `fecha`, `cantidad`, `preci
 (30, 12, '2020-06-11 00:57:00', 0, '0.00', 1),
 (31, 12, '2020-06-11 00:57:00', 0, '0.00', 1),
 (32, 12, '2020-06-11 00:57:01', 0, '0.00', 1),
-(33, 12, '2020-06-11 00:57:01', 0, '0.00', 1);
+(33, 12, '2020-06-11 00:57:01', 0, '0.00', 1),
+(34, 15, '2020-07-17 17:52:14', 2, '34.00', 1);
 
 -- --------------------------------------------------------
 
@@ -231,7 +225,7 @@ INSERT INTO `entradas` (`correlativo`, `idproducto`, `fecha`, `cantidad`, `preci
 CREATE TABLE `estadosmaquinas` (
   `idestado` int(11) NOT NULL,
   `estado` varchar(20) COLLATE utf8_spanish_ci NOT NULL,
-  `status` int(11) NOT NULL DEFAULT '1'
+  `status` int(11) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
@@ -253,8 +247,8 @@ INSERT INTO `estadosmaquinas` (`idestado`, `estado`, `status`) VALUES
 CREATE TABLE `estadosordenproduccion` (
   `idestadoordenproduccion` int(11) NOT NULL,
   `estado` varchar(10) COLLATE utf8_spanish_ci NOT NULL,
-  `status` int(11) NOT NULL DEFAULT '1',
-  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `status` int(11) NOT NULL DEFAULT 1,
+  `created_at` datetime DEFAULT current_timestamp(),
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
@@ -279,6 +273,8 @@ INSERT INTO `estadosordenproduccion` (`idestadoordenproduccion`, `estado`, `stat
 CREATE TABLE `factura` (
   `nofactura` bigint(11) NOT NULL,
   `fecha` datetime NOT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `deleted_at` datetime DEFAULT NULL,
   `usuario` int(11) DEFAULT NULL,
   `codcliente` int(11) DEFAULT NULL,
   `totaltactura` decimal(10,2) DEFAULT NULL
@@ -293,7 +289,7 @@ CREATE TABLE `factura` (
 CREATE TABLE `maquinas` (
   `idmaquina` int(11) NOT NULL,
   `idmodulo` int(11) NOT NULL,
-  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime DEFAULT NULL,
   `serial` varchar(40) COLLATE utf8_spanish_ci NOT NULL,
   `nombre` varchar(40) COLLATE utf8_spanish_ci NOT NULL,
@@ -310,17 +306,9 @@ CREATE TABLE `maquinas` (
   `fechasalida` datetime DEFAULT NULL,
   `manuales` varchar(255) COLLATE utf8_spanish_ci NOT NULL,
   `deleted_at` datetime DEFAULT NULL,
-  `status` int(11) NOT NULL DEFAULT '1'
+  `status` int(11) NOT NULL DEFAULT 1,
+  `usuario_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
-
---
--- Volcado de datos para la tabla `maquinas`
---
-
-INSERT INTO `maquinas` (`idmaquina`, `idmodulo`, `created_at`, `updated_at`, `serial`, `nombre`, `corriente_encenmotap`, `corriente_encendido`, `MTTF`, `MTBF`, `tipo_maquina`, `idestado`, `fotohref`, `centrocostos`, `descripcion`, `fechacompra`, `fechasalida`, `manuales`, `deleted_at`, `status`) VALUES
-(1, 1, '2020-05-25 21:18:28', NULL, '123456', 'Maquina Plana1', 12, 15, 12, 12, 1, 4, '', '1234', 'maquina Plana', '2020-05-25 00:00:00', '0000-00-00 00:00:00', '', NULL, 1),
-(2, 1, '2020-05-25 21:25:23', NULL, '234567', 'Fileteadora Singer', 1, 1.3, 40, 23, 0, 4, '', '', 'Fileteadora Feliz', '2020-05-25 00:00:00', '0000-00-00 00:00:00', '', NULL, 1),
-(3, 2, '2020-05-25 21:29:02', NULL, '54345676', 'Fileteadora Singer1', 3.4, 3.4, 23, 22, 0, 3, '', '34665', 'Ojaladora', '2020-05-25 00:00:00', NULL, '', NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -332,33 +320,23 @@ CREATE TABLE `moduloiot` (
   `idmoduloIoT` int(11) NOT NULL,
   `direccion` varchar(10) COLLATE utf8_spanish_ci NOT NULL,
   `nombre` varchar(25) COLLATE utf8_spanish_ci NOT NULL,
-  `descripcion` varchar(50) COLLATE utf8_spanish_ci NOT NULL,
+  `localizacion` varchar(50) COLLATE utf8_spanish_ci NOT NULL,
   `serie` varchar(10) COLLATE utf8_spanish_ci NOT NULL,
   `idtipomoduloiot` int(11) NOT NULL,
-  `status` int(11) NOT NULL DEFAULT '1',
-  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `status` int(11) NOT NULL DEFAULT 1,
+  `created_at` datetime DEFAULT current_timestamp(),
   `updated_at` datetime DEFAULT NULL,
-  `deleted_at` datetime DEFAULT NULL
+  `deleted_at` datetime DEFAULT NULL,
+  `usuario_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `moduloiot`
 --
 
-INSERT INTO `moduloiot` (`idmoduloIoT`, `direccion`, `nombre`, `descripcion`, `serie`, `idtipomoduloiot`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, '123456', 'MedEn Plana1', 'Medicion en Máquina 1', '001', 1, 1, '2020-05-25 14:00:11', NULL, NULL),
-(2, '233454', 'Medicion en sal', 'Medicion en Máquina 8', '23453', 1, 1, '2020-05-25 14:00:11', NULL, NULL),
-(3, '00001', 'maquina2', '', '111111', 1, 1, '2020-05-25 14:00:11', NULL, NULL),
-(4, 'dfdsdff', 'dddff', 'Medicion de corrente en maquina 2', '11111', 1, 1, '2020-05-25 14:00:11', NULL, NULL),
-(5, 'sdfdfdf', 'dggffdfg', 'Medicion de corrente en maquina 2', '3333333', 1, 1, '2020-05-25 14:00:11', NULL, NULL),
-(6, '1234567', 'sdfsdf', 'dsfsdfsd', 'dfsfsf', 1, 1, '2020-05-25 14:00:11', NULL, NULL),
-(7, '4444444', 'Gloria', 'dfsfdsfs', 'sfdsfsfds', 1, 1, '2020-05-25 14:00:39', NULL, NULL),
-(8, '1111111111', 'Pepe', 'dsfsfsdf', 'sdfdsfdsfd', 1, 1, '2020-05-25 14:00:53', NULL, NULL),
-(9, '555555555', 'dfgdfgdg', 'dgfdgd', 'dfgdfgdgdg', 1, 1, '2020-05-25 14:01:14', NULL, NULL),
-(10, 'rtrerty', 'ertyyte', 'werttrw', 'werttrw', 1, 1, '2020-05-25 14:01:29', NULL, NULL),
-(11, 'iutuityiu', 'tuyiiuyt', 'ytiuytuyi', 'tyutyuityi', 1, 1, '2020-05-25 14:01:43', NULL, NULL),
-(12, '7687685tyt', 'dfsfd', 'sfdsdfsdf', '3333', 2, 1, '2020-05-26 22:10:32', NULL, NULL),
-(13, '7687685tyt', 'gfgfdgdd', 'dsdfsdf', '0013', 5, 1, '2020-05-26 22:15:12', NULL, NULL);
+INSERT INTO `moduloiot` (`idmoduloIoT`, `direccion`, `nombre`, `localizacion`, `serie`, `idtipomoduloiot`, `status`, `created_at`, `updated_at`, `deleted_at`, `usuario_id`) VALUES
+(1, '1234', 'Medidor Estación 1', 'Estación 1', '123', 4, 1, '2020-08-03 16:33:49', NULL, NULL, 1),
+(2, '12345', 'Botonera 2', 'Estación 2', '1234566', 3, 1, '2020-08-03 16:44:29', NULL, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -370,20 +348,13 @@ CREATE TABLE `modulos` (
   `idmodulo` int(11) NOT NULL,
   `nombre` varchar(40) COLLATE utf8_spanish_ci NOT NULL,
   `idplanta` int(11) NOT NULL,
-  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `uptdated_at` datetime DEFAULT NULL,
   `descripcion` varchar(200) COLLATE utf8_spanish_ci NOT NULL,
   `deleted_at` datetime DEFAULT NULL,
-  `status` int(11) NOT NULL DEFAULT '1'
+  `status` int(11) NOT NULL DEFAULT 1,
+  `usuario_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
-
---
--- Volcado de datos para la tabla `modulos`
---
-
-INSERT INTO `modulos` (`idmodulo`, `nombre`, `idplanta`, `created_at`, `uptdated_at`, `descripcion`, `deleted_at`, `status`) VALUES
-(1, 'Camisas Polo', 1, '2020-05-25 19:33:37', NULL, 'Modulo Camisas Polo', NULL, 1),
-(2, 'Pantalones Jeans', 2, '2020-05-25 19:33:37', NULL, 'Modulo de Pantalones', NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -393,25 +364,32 @@ INSERT INTO `modulos` (`idmodulo`, `nombre`, `idplanta`, `created_at`, `uptdated
 
 CREATE TABLE `ordenesproduccion` (
   `idordenproduccion` int(11) NOT NULL,
+  `numeroordenproduccion` int(11) NOT NULL,
   `fechaprogramacion` date DEFAULT NULL,
   `fechapausa` date DEFAULT NULL,
   `fechacontinuacion` date DEFAULT NULL,
   `fechacierre` date DEFAULT NULL,
-  `numeroordenproduccion` int(11) NOT NULL,
-  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
   `descripcion` varchar(200) COLLATE utf8_spanish_ci NOT NULL,
-  `idestadoordenproduccion` int(11) NOT NULL DEFAULT '1',
-  `status` int(11) NOT NULL DEFAULT '1'
+  `idestadoordenproduccion` int(11) NOT NULL DEFAULT 1,
+  `status` int(11) NOT NULL DEFAULT 1,
+  `usuario_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `ordenesproduccion`
 --
 
-INSERT INTO `ordenesproduccion` (`idordenproduccion`, `fechaprogramacion`, `fechapausa`, `fechacontinuacion`, `fechacierre`, `numeroordenproduccion`, `created_at`, `updated_at`, `deleted_at`, `descripcion`, `idestadoordenproduccion`, `status`) VALUES
-(1, '0000-00-00', '0000-00-00', '0000-00-00', '0000-00-00', 1, '2020-05-25 18:04:34', NULL, NULL, '100 Camisas para Pedido para carsil', 1, 1);
+INSERT INTO `ordenesproduccion` (`idordenproduccion`, `numeroordenproduccion`, `fechaprogramacion`, `fechapausa`, `fechacontinuacion`, `fechacierre`, `created_at`, `updated_at`, `deleted_at`, `descripcion`, `idestadoordenproduccion`, `status`, `usuario_id`) VALUES
+(1, 1, '2020-07-20', NULL, NULL, NULL, '2020-07-20 23:05:38', NULL, NULL, 'Casa', 1, 1, 15),
+(9, 20, '2020-06-18', NULL, NULL, NULL, '2020-07-20 23:24:08', NULL, NULL, '12', 1, 1, 1),
+(10, 21, '2020-06-18', NULL, NULL, NULL, '2020-07-20 23:24:43', NULL, NULL, '12', 1, 1, 1),
+(11, 30, '2020-07-02', NULL, NULL, NULL, '2020-07-20 23:26:17', NULL, NULL, '2', 1, 1, 1),
+(12, 26, '2020-07-20', NULL, NULL, NULL, '2020-07-20 23:55:08', NULL, NULL, 'fdgdfgdg', 1, 1, 1),
+(13, 130, '2020-07-21', NULL, NULL, NULL, '2020-07-21 00:37:27', NULL, NULL, '30', 1, 1, 1),
+(14, 14, '2020-07-25', NULL, NULL, NULL, '2020-07-25 11:23:35', NULL, NULL, 'camisas', 1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -426,22 +404,12 @@ CREATE TABLE `plantas` (
   `codigo` varchar(10) COLLATE utf8_spanish_ci NOT NULL,
   `ciudad` varchar(30) COLLATE utf8_spanish_ci NOT NULL,
   `telefono` varchar(15) COLLATE utf8_spanish_ci NOT NULL,
-  `status` int(11) NOT NULL DEFAULT '1',
-  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `status` int(11) NOT NULL DEFAULT 1,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime DEFAULT NULL,
-  `deleted_at` datetime DEFAULT NULL
+  `deleted_at` datetime DEFAULT NULL,
+  `usuario_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
-
---
--- Volcado de datos para la tabla `plantas`
---
-
-INSERT INTO `plantas` (`idplanta`, `nombre`, `direccion`, `codigo`, `ciudad`, `telefono`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'Planta1 Planetario', 'Calle Planetario', '1', 'Medellín', '2222222', 1, '2020-05-25 18:56:52', NULL, NULL),
-(2, 'Planta2 Itagui', 'Calle1 ', '', 'Itagui', '222223333', 1, '2020-05-25 18:56:52', NULL, NULL),
-(3, 'Planta Zamora', 'zamora', '3', 'Medellin', '234567', 1, '2020-05-26 22:31:12', NULL, NULL),
-(4, 'Planta de PeÃ±ol', 'peÃ±ol', '4', 'PeÃ±os', '4567564', 1, '2020-05-26 22:32:07', NULL, NULL),
-(5, 'Cali', 'cali', '5', 'cali', '4567', 1, '2020-05-26 22:32:47', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -456,11 +424,11 @@ CREATE TABLE `producto` (
   `descripcion` varchar(100) COLLATE utf8_spanish_ci DEFAULT NULL,
   `precio` decimal(10,2) DEFAULT NULL,
   `existencia` int(11) DEFAULT NULL,
-  `foto` mediumtext COLLATE utf8_spanish_ci,
-  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `foto` mediumtext COLLATE utf8_spanish_ci DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
-  `status` int(11) NOT NULL DEFAULT '1',
+  `status` int(11) NOT NULL DEFAULT 1,
   `usuario_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
@@ -472,8 +440,8 @@ INSERT INTO `producto` (`idproducto`, `nombre`, `referencia`, `descripcion`, `pr
 (8, 'Vaso Pinpinela', '1', 'De cristal', '939.59', 480, 'img_producto.png', '2020-06-08 00:26:13', NULL, NULL, 1, 1),
 (12, 'Galletas Wafer', '2', NULL, '602.73', 1000, 'img_producto.png', '2020-06-08 00:46:41', NULL, NULL, 1, 1),
 (13, 'Diccionario', '3', '', '507.30', 1029, 'img_producto.png', '2020-06-08 00:47:54', NULL, NULL, 1, 1),
-(14, 'Mermelada', '4', '', '8999.00', 345, 'img_producto.png', '2020-06-08 00:52:02', NULL, '2020-06-08 10:53:41', 0, 1),
-(15, 'Tabaco', '6', 'Verde', '716.67', 1200, 'img_producto.png', '2020-06-08 00:58:24', NULL, NULL, 1, 1),
+(14, 'Mermelada', '4', '', '8999.00', 345, 'img_producto.png', '2020-06-08 00:52:02', NULL, '2020-06-08 10:53:41', 1, 1),
+(15, 'Tabaco', '6', 'Verde', '715.53', 1202, 'img_producto.png', '2020-06-08 00:58:24', NULL, NULL, 1, 1),
 (16, 'bingo', '33334', '4444', '5.00', 30, 'img_e2ea0e22920425dc4f8f352ff94680f1.jpg', '2020-06-09 21:25:58', NULL, NULL, 0, 1);
 
 --
@@ -498,7 +466,7 @@ CREATE TABLE `proveedor` (
   `proveedor` varchar(100) COLLATE utf8_spanish_ci DEFAULT NULL,
   `contacto` varchar(100) COLLATE utf8_spanish_ci DEFAULT NULL,
   `telefono` bigint(11) DEFAULT NULL,
-  `direccion` mediumtext COLLATE utf8_spanish_ci
+  `direccion` mediumtext COLLATE utf8_spanish_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
@@ -527,8 +495,8 @@ INSERT INTO `proveedor` (`codproveedor`, `proveedor`, `contacto`, `telefono`, `d
 CREATE TABLE `relacionempresas` (
   `idrelacionempresa` int(11) NOT NULL,
   `relacionempresa` varchar(15) COLLATE utf8_spanish_ci NOT NULL,
-  `status` int(11) NOT NULL DEFAULT '1',
-  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `status` int(11) NOT NULL DEFAULT 1,
+  `created_at` datetime DEFAULT current_timestamp(),
   `uptdated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
@@ -551,8 +519,8 @@ INSERT INTO `relacionempresas` (`idrelacionempresa`, `relacionempresa`, `status`
 CREATE TABLE `rol` (
   `idrol` int(11) NOT NULL,
   `rol` varchar(20) COLLATE utf8_spanish_ci DEFAULT NULL,
-  `status` int(11) NOT NULL DEFAULT '1',
-  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `status` int(11) NOT NULL DEFAULT 1,
+  `created_at` datetime DEFAULT current_timestamp(),
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
@@ -579,8 +547,8 @@ CREATE TABLE `tiposmodulosiot` (
   `tipomoduloIoT` varchar(20) COLLATE utf8_spanish_ci NOT NULL,
   `descripcion` varchar(200) COLLATE utf8_spanish_ci NOT NULL,
   `referencia` varchar(20) COLLATE utf8_spanish_ci NOT NULL,
-  `status` int(11) NOT NULL DEFAULT '1',
-  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `status` int(11) NOT NULL DEFAULT 1,
+  `created_at` datetime DEFAULT current_timestamp(),
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
@@ -609,8 +577,8 @@ CREATE TABLE `usuario` (
   `usuario` varchar(15) COLLATE utf8_spanish_ci DEFAULT NULL,
   `clave` varchar(100) COLLATE utf8_spanish_ci DEFAULT NULL,
   `rol` int(11) DEFAULT NULL,
-  `status` int(11) NOT NULL DEFAULT '1',
-  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `status` int(11) NOT NULL DEFAULT 1,
+  `created_at` datetime DEFAULT current_timestamp(),
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
@@ -679,7 +647,8 @@ ALTER TABLE `detalle_temp`
 ALTER TABLE `empresas`
   ADD PRIMARY KEY (`idempresa`),
   ADD UNIQUE KEY `codigo` (`codigo`),
-  ADD KEY `relacionempresa` (`idrelacionempresa`);
+  ADD KEY `relacionempresa` (`idrelacionempresa`),
+  ADD KEY `usuario_id` (`usuario_id`);
 
 --
 -- Indices de la tabla `entradas`
@@ -716,34 +685,39 @@ ALTER TABLE `maquinas`
   ADD PRIMARY KEY (`idmaquina`),
   ADD KEY `idestado` (`idestado`),
   ADD KEY `idmodulo` (`idmodulo`),
-  ADD KEY `tipo_maquina` (`tipo_maquina`);
+  ADD KEY `tipo_maquina` (`tipo_maquina`),
+  ADD KEY `usuario_id` (`usuario_id`);
 
 --
 -- Indices de la tabla `moduloiot`
 --
 ALTER TABLE `moduloiot`
   ADD PRIMARY KEY (`idmoduloIoT`),
-  ADD KEY `idtipomoduloiot` (`idtipomoduloiot`);
+  ADD KEY `idtipomoduloiot` (`idtipomoduloiot`),
+  ADD KEY `usuario_id` (`usuario_id`);
 
 --
 -- Indices de la tabla `modulos`
 --
 ALTER TABLE `modulos`
   ADD PRIMARY KEY (`idmodulo`),
-  ADD KEY `idplanta` (`idplanta`);
+  ADD KEY `idplanta` (`idplanta`),
+  ADD KEY `usuario_id` (`usuario_id`);
 
 --
 -- Indices de la tabla `ordenesproduccion`
 --
 ALTER TABLE `ordenesproduccion`
   ADD PRIMARY KEY (`idordenproduccion`),
-  ADD KEY `idestadoordenproduccion` (`idestadoordenproduccion`);
+  ADD KEY `idestadoordenproduccion` (`idestadoordenproduccion`),
+  ADD KEY `usuario_id` (`usuario_id`);
 
 --
 -- Indices de la tabla `plantas`
 --
 ALTER TABLE `plantas`
-  ADD PRIMARY KEY (`idplanta`);
+  ADD PRIMARY KEY (`idplanta`),
+  ADD KEY `usuario_id` (`usuario_id`);
 
 --
 -- Indices de la tabla `producto`
@@ -809,13 +783,13 @@ ALTER TABLE `detalle_temp`
 -- AUTO_INCREMENT de la tabla `empresas`
 --
 ALTER TABLE `empresas`
-  MODIFY `idempresa` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `idempresa` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `entradas`
 --
 ALTER TABLE `entradas`
-  MODIFY `correlativo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `correlativo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT de la tabla `estadosmaquinas`
@@ -839,31 +813,31 @@ ALTER TABLE `factura`
 -- AUTO_INCREMENT de la tabla `maquinas`
 --
 ALTER TABLE `maquinas`
-  MODIFY `idmaquina` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `idmaquina` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `moduloiot`
 --
 ALTER TABLE `moduloiot`
-  MODIFY `idmoduloIoT` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `idmoduloIoT` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `modulos`
 --
 ALTER TABLE `modulos`
-  MODIFY `idmodulo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `idmodulo` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `ordenesproduccion`
 --
 ALTER TABLE `ordenesproduccion`
-  MODIFY `idordenproduccion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `idordenproduccion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT de la tabla `plantas`
 --
 ALTER TABLE `plantas`
-  MODIFY `idplanta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `idplanta` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `producto`
@@ -935,7 +909,8 @@ ALTER TABLE `detalle_temp`
 -- Filtros para la tabla `empresas`
 --
 ALTER TABLE `empresas`
-  ADD CONSTRAINT `empresas_ibfk_1` FOREIGN KEY (`idrelacionempresa`) REFERENCES `relacionempresas` (`idrelacionempresa`);
+  ADD CONSTRAINT `empresas_ibfk_1` FOREIGN KEY (`idrelacionempresa`) REFERENCES `relacionempresas` (`idrelacionempresa`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `empresas_ibfk_2` FOREIGN KEY (`usuario_id`) REFERENCES `usuario` (`idusuario`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `entradas`
@@ -956,25 +931,35 @@ ALTER TABLE `factura`
 --
 ALTER TABLE `maquinas`
   ADD CONSTRAINT `maquinas_ibfk_1` FOREIGN KEY (`idestado`) REFERENCES `estadosmaquinas` (`idestado`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `maquinas_ibfk_2` FOREIGN KEY (`idmodulo`) REFERENCES `modulos` (`idmodulo`);
+  ADD CONSTRAINT `maquinas_ibfk_2` FOREIGN KEY (`idmodulo`) REFERENCES `modulos` (`idmodulo`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `maquinas_ibfk_3` FOREIGN KEY (`usuario_id`) REFERENCES `usuario` (`idusuario`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `moduloiot`
 --
 ALTER TABLE `moduloiot`
-  ADD CONSTRAINT `moduloiot_ibfk_1` FOREIGN KEY (`idtipomoduloiot`) REFERENCES `tiposmodulosiot` (`idtipomoduloiot`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `moduloiot_ibfk_1` FOREIGN KEY (`idtipomoduloiot`) REFERENCES `tiposmodulosiot` (`idtipomoduloiot`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `moduloiot_ibfk_2` FOREIGN KEY (`usuario_id`) REFERENCES `usuario` (`idusuario`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `modulos`
 --
 ALTER TABLE `modulos`
-  ADD CONSTRAINT `modulos_ibfk_1` FOREIGN KEY (`idplanta`) REFERENCES `plantas` (`idplanta`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `modulos_ibfk_1` FOREIGN KEY (`idplanta`) REFERENCES `plantas` (`idplanta`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `modulos_ibfk_2` FOREIGN KEY (`usuario_id`) REFERENCES `usuario` (`idusuario`);
 
 --
 -- Filtros para la tabla `ordenesproduccion`
 --
 ALTER TABLE `ordenesproduccion`
-  ADD CONSTRAINT `idestadoordenproduccion` FOREIGN KEY (`idestadoordenproduccion`) REFERENCES `estadosordenproduccion` (`idestadoordenproduccion`);
+  ADD CONSTRAINT `idestadoordenproduccion` FOREIGN KEY (`idestadoordenproduccion`) REFERENCES `estadosordenproduccion` (`idestadoordenproduccion`),
+  ADD CONSTRAINT `ordenesproduccion_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuario` (`idusuario`);
+
+--
+-- Filtros para la tabla `plantas`
+--
+ALTER TABLE `plantas`
+  ADD CONSTRAINT `plantas_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuario` (`idusuario`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `producto`
