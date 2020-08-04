@@ -33,7 +33,7 @@
 				<th>ID</th>
 				<th>Dirección</th>
 				<th>Nombre</th>
-				<th>Descripción</th>
+				<th>Localización</th>
 				<th>Serie</th>
 				<th>Referencia</th>
 				<th>Fecha Creación</th>
@@ -44,17 +44,21 @@
 			<?php
 				//paginador
 				include "../conexion.php";
-				$sql_register=mysqli_query($conexion,"SELECT COUNT(*) as total_registro FROM moduloiot WHERE status=1");
+				$sql_register=mysqli_query($conexion,"
+					SELECT COUNT(*) as total_registro 
+					FROM moduloiot 
+					WHERE status=1");
 				include "calculonumpaginas.php";
 
 				//Crear lista
 				$query = mysqli_query($conexion,"
-					SELECT u.idmoduloIoT, u.direccion, u.nombre AS 'nombremoduloiot', u.descripcion, u.serie, r.referencia, u.created_at, m.nombre AS 'nombreusuariocreador' 
+					SELECT u.idmoduloIoT, u.direccion, u.nombre AS 'nombremoduloiot', u.localizacion, u.serie, r.referencia, u.created_at, m.nombre AS 'nombreusuariocreador' 
 					FROM moduloiot u 
 					INNER JOIN tiposmodulosiot r ON u.idtipomoduloiot = r.idtipomoduloiot
 					INNER JOIN usuario m ON u.usuario_id = m.idusuario  
 					WHERE u.status=1 ORDER BY u.idmoduloIoT ASC LIMIT $desde,$por_pagina");
 				mysqli_close($conexion);
+				
 				$result = mysqli_num_rows($query);
 				if($result>0){
 					while ($data=mysqli_fetch_array($query)) {
@@ -67,7 +71,7 @@
 								<td><?php echo $data['idmoduloIoT']; ?></td>
 								<td><?php echo $data['direccion']; ?></td>
 								<td><?php echo $data['nombremoduloiot']; ?></td>
-								<td><?php echo $data['descripcion']; ?></td>
+								<td><?php echo $data['localizacion']; ?></td>
 								<td><?php echo $data['serie']; ?></td>
 								<td><?php echo $data['referencia']; ?></td>
 								<td><?php echo $fecha->format('Y-m-d'); ?></td>

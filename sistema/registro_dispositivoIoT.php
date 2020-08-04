@@ -14,20 +14,21 @@
 		$direccion=$_POST['direccion'];
 		$serie=$_POST['serie'];
 		$tipo=$_POST['tipo'];
-		$descripcion=$_POST['descripcion'];
+		$localizacion=$_POST['localizacion'];
+		$usuario_id=$_SESSION['idUser'];
 
-		if (empty($_POST['direccion']) || empty($_POST['nombre']) || empty($_POST['serie']) || empty($_POST['tipo']) ) 
+		if (empty($_POST['direccion']) || empty($_POST['nombre']) || empty($_POST['serie']) || empty($_POST['tipo']) || empty($_POST['localizacion'])) 
 		{
-			$alert='<p class="msg_error">Los campos Dirección, Nombre, Serie y Tipo son obligatorios</p>';
+			$alert='<p class="msg_error">Los campos: Nombre, Dirección, Localización, Serie y Tipo son obligatorios</p>';
 		}else{
 			include "../conexion.php";
 			$query= mysqli_query($conexion,"SELECT * FROM moduloiot WHERE ((direccion='$direccion' OR nombre='$nombre' OR serie='$serie') AND status=1)");
 			$result=mysqli_fetch_array($query);
 			if ($result>0){
-				$alert='<p class="msg_error">El nombre, direccion o serie ya existen</p>';
+				$alert='<p class="msg_error">El nombre, direccion o serie ya existen. Estos campos no pueden estar repetidos.</p>';
 			}else{
-				$query_insert = mysqli_query($conexion,"INSERT INTO moduloiot(direccion,nombre,descripcion,serie,idtipomoduloiot)
-					VALUES ('$direccion','$nombre','$descripcion','$serie','$tipo')");
+				$query_insert = mysqli_query($conexion,"INSERT INTO moduloiot(direccion,nombre, localizacion, serie, idtipomoduloiot, usuario_id)
+					VALUES ('$direccion','$nombre','$localizacion','$serie','$tipo', $usuario_id)");
 				if($query_insert){
 					//$alert='<p class="msg_save">Usuario creado Correctamente</p>';
 					mysqli_close($conexion);
@@ -43,7 +44,7 @@
 		$direccion='';
 		$serie='';
 		$tipo=1;
-		$descripcion='';
+		$localizacion='';
 	}
 ?>
 
@@ -69,8 +70,8 @@
 				<input type="text" name="direccion" id="direccion" placeholder="Dirección" value="<?php echo $direccion; ?>">
 				<label for='nombre'>Nombre</label>
 				<input type="text" name="nombre" id="nombre" placeholder="Nombre" value="<?php echo $nombre; ?>">
-				<label for="descripcion">Descripción</label>
-				<input type="text" name="descripcion" id="descripcion" placeholder="Descripción" value="<?php echo $descripcion; ?>">
+				<label for="localizacion">Localización</label>
+				<input type="text" name="localizacion" id="localizacion" placeholder="Localización" value="<?php echo $localizacion; ?>">
 				<label for="serie">Serie</label>
 				<input type="text" name="serie" id="serie" placeholder="Serie" value="<?php echo $serie; ?>">
 				<label for="tipo">Tipo de Dispositivo IoT</label>
