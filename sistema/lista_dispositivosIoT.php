@@ -64,8 +64,6 @@
 					while ($data=mysqli_fetch_array($query)) {
 						$formato='Y-m-d H:i:s';
 						$fecha= DateTime::createFromFormat($formato,$data['created_at']);
-
-
 						?>
 							<tr>
 								<td><?php echo $data['idmoduloIoT']; ?></td>
