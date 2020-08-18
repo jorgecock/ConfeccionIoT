@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 04-08-2020 a las 05:34:08
+-- Tiempo de generación: 18-08-2020 a las 03:38:09
 -- Versión del servidor: 10.4.11-MariaDB
 -- Versión de PHP: 7.4.5
 
@@ -49,6 +49,26 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `actualizar_precio_producto` (`n_can
     END$$
 
 DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `alarma`
+--
+
+CREATE TABLE `alarma` (
+  `idAlarma` int(11) NOT NULL,
+  `estado` text COLLATE utf8_spanish_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `alarma`
+--
+
+INSERT INTO `alarma` (`idAlarma`, `estado`) VALUES
+(1, 'off'),
+(2, 'on'),
+(3, 'on');
 
 -- --------------------------------------------------------
 
@@ -283,6 +303,26 @@ CREATE TABLE `factura` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `led`
+--
+
+CREATE TABLE `led` (
+  `id` int(11) NOT NULL,
+  `Boton1` int(11) NOT NULL,
+  `Boton2` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `led`
+--
+
+INSERT INTO `led` (`id`, `Boton1`, `Boton2`) VALUES
+(1, 1, 1),
+(2, 0, 0);
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `maquinas`
 --
 
@@ -354,6 +394,30 @@ CREATE TABLE `modulos` (
   `deleted_at` datetime DEFAULT NULL,
   `status` int(11) NOT NULL DEFAULT 1,
   `usuario_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `operacionesporreferencia`
+--
+
+CREATE TABLE `operacionesporreferencia` (
+  `idOperacion` int(11) NOT NULL,
+  `idReferencia` int(11) NOT NULL,
+  `idTipoMaquina` int(11) NOT NULL,
+  `descripcion` varchar(40) COLLATE utf8_spanish_ci NOT NULL,
+  `repeticiones` int(11) NOT NULL,
+  `observaciones` int(11) NOT NULL,
+  `tipoaguja` int(11) NOT NULL,
+  `tipoguia` int(11) NOT NULL,
+  `crated_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT NULL,
+  `deleted_at` datetime DEFAULT NULL,
+  `status` int(11) NOT NULL,
+  `des_prenda` varchar(10) COLLATE utf8_spanish_ci NOT NULL,
+  `sam` int(11) NOT NULL,
+  `usuarioid` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 -- --------------------------------------------------------
@@ -437,12 +501,12 @@ CREATE TABLE `producto` (
 --
 
 INSERT INTO `producto` (`idproducto`, `nombre`, `referencia`, `descripcion`, `precio`, `existencia`, `foto`, `created_at`, `updated_at`, `deleted_at`, `status`, `usuario_id`) VALUES
-(8, 'Vaso Pinpinela', '1', 'De cristal', '939.59', 480, 'img_producto.png', '2020-06-08 00:26:13', NULL, NULL, 1, 1),
-(12, 'Galletas Wafer', '2', NULL, '602.73', 1000, 'img_producto.png', '2020-06-08 00:46:41', NULL, NULL, 1, 1),
-(13, 'Diccionario', '3', '', '507.30', 1029, 'img_producto.png', '2020-06-08 00:47:54', NULL, NULL, 1, 1),
-(14, 'Mermelada', '4', '', '8999.00', 345, 'img_producto.png', '2020-06-08 00:52:02', NULL, '2020-06-08 10:53:41', 1, 1),
-(15, 'Tabaco', '6', 'Verde', '715.53', 1202, 'img_producto.png', '2020-06-08 00:58:24', NULL, NULL, 1, 1),
-(16, 'bingo', '33334', '4444', '5.00', 30, 'img_e2ea0e22920425dc4f8f352ff94680f1.jpg', '2020-06-09 21:25:58', NULL, NULL, 0, 1);
+(8, 'Camisa Polo verde xl', '1', 'De cristal', '939.59', 480, 'img_producto.png', '2020-06-08 00:26:13', NULL, NULL, 1, 1),
+(12, 'Camisa Polo Azul m', '2', NULL, '602.73', 1000, 'img_producto.png', '2020-06-08 00:46:41', NULL, NULL, 1, 1),
+(13, 'Camisa Polo Azul roja', '3', '', '507.30', 1029, 'img_producto.png', '2020-06-08 00:47:54', NULL, NULL, 1, 1),
+(14, 'Camisa Polo XXl', '4', '', '8999.00', 345, 'img_producto.png', '2020-06-08 00:52:02', NULL, '2020-06-08 10:53:41', 0, 1),
+(15, 'Camisa Polo Marron', '6', 'Verde', '715.53', 1202, 'img_producto.png', '2020-06-08 00:58:24', NULL, NULL, 1, 1),
+(16, 'camisa Polo violeta', '33334', '4444', '5.00', 30, 'img_e2ea0e22920425dc4f8f352ff94680f1.jpg', '2020-06-09 21:25:58', NULL, NULL, 1, 1);
 
 --
 -- Disparadores `producto`
@@ -485,6 +549,33 @@ INSERT INTO `proveedor` (`codproveedor`, `proveedor`, `contacto`, `telefono`, `d
 (9, 'VAIO', 'Felix Arnoldo Rojas', 476378276, 'Avenida las Americas Zona 13'),
 (10, 'SUMAR', 'Oscar Maldonado', 788376787, 'Colonia San Jose, Zona 5 Guatemala'),
 (11, 'HP', 'Angel Cardona', 2147483647, '5ta. calle zona 4 Guatemala');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `razontiemposimproductivos`
+--
+
+CREATE TABLE `razontiemposimproductivos` (
+  `idrazontiemposimproductivo` int(11) NOT NULL,
+  `tiporazontiemposimproductivo` varchar(30) COLLATE utf8_spanish_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `razontiemposimproductivos`
+--
+
+INSERT INTO `razontiemposimproductivos` (`idrazontiemposimproductivo`, `tiporazontiemposimproductivo`) VALUES
+(1, 'MAQUINA MALA	'),
+(2, 'RUPTURA DE LINEA	'),
+(3, 'AJUSTE DE MAQUINA	'),
+(4, 'ESPERA DE MECANICO	'),
+(5, 'CAMBIO DE MAQUINA	'),
+(6, 'PROBLEMA DE CALIDAD	'),
+(7, 'PROBLEMA DE CORTE	'),
+(8, 'AJUSTE DE GUIA	'),
+(9, 'FALTA DE TRABAJO 	'),
+(10, 'AUSENTISMO	');
 
 -- --------------------------------------------------------
 
@@ -611,6 +702,12 @@ INSERT INTO `usuario` (`idusuario`, `nombre`, `correo`, `usuario`, `clave`, `rol
 --
 
 --
+-- Indices de la tabla `alarma`
+--
+ALTER TABLE `alarma`
+  ADD PRIMARY KEY (`idAlarma`);
+
+--
 -- Indices de la tabla `cliente`
 --
 ALTER TABLE `cliente`
@@ -679,6 +776,12 @@ ALTER TABLE `factura`
   ADD KEY `codcliente` (`codcliente`);
 
 --
+-- Indices de la tabla `led`
+--
+ALTER TABLE `led`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indices de la tabla `maquinas`
 --
 ALTER TABLE `maquinas`
@@ -703,6 +806,13 @@ ALTER TABLE `modulos`
   ADD PRIMARY KEY (`idmodulo`),
   ADD KEY `idplanta` (`idplanta`),
   ADD KEY `usuario_id` (`usuario_id`);
+
+--
+-- Indices de la tabla `operacionesporreferencia`
+--
+ALTER TABLE `operacionesporreferencia`
+  ADD PRIMARY KEY (`idOperacion`),
+  ADD KEY `idReferencia` (`idReferencia`);
 
 --
 -- Indices de la tabla `ordenesproduccion`
@@ -733,6 +843,12 @@ ALTER TABLE `proveedor`
   ADD PRIMARY KEY (`codproveedor`);
 
 --
+-- Indices de la tabla `razontiemposimproductivos`
+--
+ALTER TABLE `razontiemposimproductivos`
+  ADD PRIMARY KEY (`idrazontiemposimproductivo`);
+
+--
 -- Indices de la tabla `relacionempresas`
 --
 ALTER TABLE `relacionempresas`
@@ -760,6 +876,12 @@ ALTER TABLE `usuario`
 --
 -- AUTO_INCREMENT de las tablas volcadas
 --
+
+--
+-- AUTO_INCREMENT de la tabla `alarma`
+--
+ALTER TABLE `alarma`
+  MODIFY `idAlarma` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `cliente`
@@ -810,6 +932,12 @@ ALTER TABLE `factura`
   MODIFY `nofactura` bigint(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT de la tabla `led`
+--
+ALTER TABLE `led`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT de la tabla `maquinas`
 --
 ALTER TABLE `maquinas`
@@ -826,6 +954,12 @@ ALTER TABLE `moduloiot`
 --
 ALTER TABLE `modulos`
   MODIFY `idmodulo` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `operacionesporreferencia`
+--
+ALTER TABLE `operacionesporreferencia`
+  MODIFY `idOperacion` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `ordenesproduccion`
@@ -850,6 +984,12 @@ ALTER TABLE `producto`
 --
 ALTER TABLE `proveedor`
   MODIFY `codproveedor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
+-- AUTO_INCREMENT de la tabla `razontiemposimproductivos`
+--
+ALTER TABLE `razontiemposimproductivos`
+  MODIFY `idrazontiemposimproductivo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `relacionempresas`
